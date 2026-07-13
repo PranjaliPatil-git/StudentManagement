@@ -27,6 +27,7 @@ const Login = () => {
   const onLogin = (data: LoginData) => {
     console.log(data);
     alert("Login Successful");
+     localStorage.setItem("userName", data.name);
     reset();
   };
 
@@ -87,6 +88,7 @@ const Login = () => {
               type="submit"
               variant="contained"
               fullWidth
+              onClick={() => navigate("/dashboard")}
             >
               Login
             </Button>

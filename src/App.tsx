@@ -1,21 +1,33 @@
-import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import StudentDetail from './pages/StudentDetail'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Student from "./pages/Student";
+import Attendance from "./pages/Attendance";
+import Fees from "./pages/Fees";
+import DashboardLayout from "./layout/DashboardLayout";
 
 const App = () => {
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={< Login/>}/>
-      <Route path="/register" element={< Register/>}/>
-      <Route path="/dashboard" element={< Dashboard/>}/>
-      <Route path="/StudentDetail" element={< StudentDetail/>}/>
-    </Routes>
-    </BrowserRouter>
-  )
-}
+      <Routes>
 
-export default App
+        {/* Public Routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Dashboard Layout */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/student" element={<Student />} />
+          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/fees" element={<Fees />} />
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;

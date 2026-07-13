@@ -7,7 +7,6 @@ type RegisterData = {
   department: string;
   email: string;
   mobile: string;
-  gender: string;
   address: string;
   password: string;
   confirmPassword: string;
@@ -27,7 +26,6 @@ const Register = () => {
       department: "",
       email: "",
       mobile: "",
-      gender: "",
       address: "",
       password: "",
       confirmPassword: ""
@@ -102,10 +100,6 @@ const Register = () => {
                 })} error={!!errors.mobile} helperText={errors.mobile?.message} />
             </Box>
             <Box sx={{ display: "flex", gap: 3 }}>
-              <TextField label="Gender" fullWidth 
-               {...register("gender", {
-                  required: "Gender is required",
-                })} error={!!errors.gender} helperText={errors.gender?.message} />
               <TextField label="Address" fullWidth
                {...register("address", {
                   required: "Address is required",
