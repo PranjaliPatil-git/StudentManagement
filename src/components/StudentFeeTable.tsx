@@ -9,7 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 interface Column {
-  id: "name" | "department" | "email" | "phone" | "joinDate";
+  id: "name" | "department" | "email" | "phone"| "totalFee" | "paidAmount" | "paidDate" | "paymentType";
   label: string;
   minWidth?: number;
   align?: "left" | "center" | "right";
@@ -20,7 +20,10 @@ const columns: readonly Column[] = [
   { id: "department", label: "Department", minWidth: 150 },
   { id: "email", label: "Email", minWidth: 250 },
   { id: "phone", label: "Phone", minWidth: 150 },
-  { id: "joinDate", label: "Join Date", minWidth: 150 },
+  { id: "totalFee", label: "Total Fee", minWidth: 150 },
+  { id: "paidAmount", label: "Paid Amount", minWidth: 150 },
+  { id: "paidDate", label: "Paid Date", minWidth: 150 },
+  { id: "paymentType", label: "Payment Type", minWidth: 150 },
 ];
 
 interface Data {
@@ -28,7 +31,10 @@ interface Data {
   department: string;
   email: string;
   phone: string;
-  joinDate: string;
+  totalFee: number;
+  paidAmount: number;
+  paidDate: string;
+  paymentType: string
 }
 
 function createData(
@@ -36,9 +42,12 @@ function createData(
   department: string,
   email: string,
   phone: string,
-  joinDate: string
+  totalFee: number,
+  paidAmount: number,
+  paidDate: string,
+  paymentType: string
 ): Data {
-  return { name, department, email, phone, joinDate };
+  return { name, department, email, phone, totalFee, paidAmount, paidDate, paymentType };
 }
 
 const rows: Data[] = [
@@ -47,39 +56,54 @@ const rows: Data[] = [
     "Electrical",
     "pranjali@gmail.com",
     "9876543210",
-    "01-01-2026"
+     40000,
+     20000,
+    "01-01-2026",
+    "Cash"
   ),
   createData(
     "Aman Sharma",
     "IT",
     "aman@gmail.com",
     "9876543211",
-    "15-02-2026"
+    50000,
+    20000,
+    "15-02-2026",
+    "Online"
   ),
   createData(
     "Raj Verma",
     "Computer Science",
     "raj@gmail.com",
     "9876543212",
-    "10-03-2026"
+    40000,
+    15000,
+    "10-03-2026",
+    "Cash"
   ),
   createData(
     "Sneha Patil",
     "Engineering",
     "sneha@gmail.com",
     "9876543213",
-    "20-04-2026"
+    40000,
+    10000,
+    "20-04-2026",
+    "Online"
   ),
   createData(
     "Rohan Singh",
     "Sales",
     "rohan@gmail.com",
     "9876543214",
-    "12-05-2026"
+    50000,
+    25000,
+    "12-05-2026",
+    "Cash"
   ),
 ];
 
-export default function StudentTable() {
+export default function StudentFeeTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 

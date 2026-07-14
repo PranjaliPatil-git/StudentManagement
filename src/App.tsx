@@ -7,6 +7,8 @@ import Student from "./pages/Student";
 import Attendance from "./pages/Attendance";
 import Fees from "./pages/Fees";
 import DashboardLayout from "./layout/DashboardLayout";
+import AddStudent from "./pages/Forms/AddStudent";
+import AddFeeDetails from "./pages/Forms/AddFeeDetails";
 
 const App = () => {
   return (
@@ -21,8 +23,10 @@ const App = () => {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/student" element={<Student />} />
+          <Route path="/add-student" element={<AddStudent/>}/>
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/fees" element={<Fees />} />
+          <Route path="/add-student-fees" element={<AddFeeDetails />} />
         </Route>
 
       </Routes>

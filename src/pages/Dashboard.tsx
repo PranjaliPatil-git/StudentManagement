@@ -26,7 +26,7 @@ const Dashboard = () => {
     </Box>
 
     <Box sx={{mt: 4}}>
-      <Typography sx={{mb: 2, fontWeight: "bold"}}>Recent Student Details</Typography>
+      <Typography sx={{mb: 2, fontWeight: "bold"}}>Student Details</Typography>
       <StudentTable/>
     </Box>
     </Box>

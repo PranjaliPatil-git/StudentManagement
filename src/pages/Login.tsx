@@ -28,6 +28,7 @@ const Login = () => {
     console.log(data);
     alert("Login Successful");
      localStorage.setItem("userName", data.name);
+      localStorage.setItem("accessToken", "dummy-token");
     reset();
   };
 
