@@ -1,77 +1,187 @@
-# React + TypeScript + Vite
+# Student Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern Student Management System built using React, TypeScript, Vite, and Material UI. This application helps educational institutions manage students, fees, courses, and other administrative tasks.
 
-Currently, two official plugins are available:
+## 🚀 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Frontend
+- React
+- TypeScript
+- Vite
+- Material UI (MUI)
+- React Router DOM
+- React Hook Form
+- Axios
 
-## React Compiler
+### Backend (Upcoming)
+- Java Spring Boot
+- PostgreSQL
+- JWT Authentication
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+---
 
-Note: This will impact Vite dev & build performances.
+## Features
 
-## Expanding the ESLint configuration
+### Authentication
+- Login
+- Logout
+- Protected Routes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Dashboard
+- Statistics
+- Quick Overview
+- Welcome Screen
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Student Management
+- Add Student
+- Edit Student
+- Delete Student
+- View Student Details
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Course Management
+- Add Course
+- Update Course
+- View Courses
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Fee Management
+- Fee Collection
+- Payment History
+- Due Amount
+- Receipt Generation
 
-```
+### Institution Management
+- Institution Details
+- Branch Management
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Reports
+- Student Reports
+- Fee Reports
+- Export Data
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Folder Structure
 
 ```
+src/
+│
+├── assets/
+├── components/
+│   ├── Common/
+│   ├── FormFields/
+│   └── Tables/
+│
+├── context/
+├── hooks/
+├── layouts/
+├── pages/
+│   ├── Authentication/
+│   ├── Dashboard/
+│   ├── Forms/
+│   └── Tables/
+│
+├── routes/
+├── services/
+├── types/
+├── utils/
+└── App.tsx
+```
+
+---
+
+## Installation
+
+Clone the repository
+
+```bash
+git clone <repository-url>
+```
+
+Go to project
+
+```bash
+cd student-management
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Start development server
+
+```bash
+npm run dev
+```
+
+Build project
+
+```bash
+npm run build
+```
+
+Preview production build
+
+```bash
+npm run preview
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file.
+
+Example:
+
+```env
+VITE_API_URL=http://localhost:8080/api
+```
+
+---
+
+## Available Scripts
+
+```bash
+npm run dev
+```
+
+Starts development server.
+
+```bash
+npm run build
+```
+
+Creates production build.
+
+```bash
+npm run preview
+```
+
+Preview production build.
+
+```bash
+npm run lint
+```
+
+Runs ESLint.
+
+---
+
+## Future Improvements
+
+- Role Based Authentication
+- Attendance Module
+- Exam Module
+- Notifications
+- File Upload
+- PDF Reports
+- Dark Mode
+- Responsive Dashboard
+
+---
+
+## Author
+
+Pranjali
