@@ -4,11 +4,17 @@ import axios from "axios";
 const API_URL = "http://localhost:8081/api/students";
 
 
+export interface Department {
+    departmentId:number;
+    departmentName:string;
+    departmentCode:string;
+}
+
 export interface Student {
 
     id: number;
     name: string;
-    department: string;
+    department: Department;
     email: string;
     phone: string;
     address: string;
@@ -18,12 +24,10 @@ export interface Student {
 
 }
 
-
-
 export type StudentRequest = {
 
     name: string;
-    department: string;
+    departmentId:number;
     email: string;
     phone: string;
     address: string;

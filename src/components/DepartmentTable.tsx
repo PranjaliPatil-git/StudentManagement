@@ -14,15 +14,16 @@ import Chip from "@mui/material/Chip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { getDepartments, deleteDepartment } from "../services/departmentApi";
 
 interface Column {
   id:
-    | "departmentName"
-    | "departmentCode"
-    | "hodName"
-    | "description"
-    | "status"
-    | "actions";
+  | "departmentName"
+  | "departmentCode"
+  | "hodName"
+  | "description"
+  | "status"
+  | "actions";
   label: string;
   minWidth?: number;
   align?: "left" | "center" | "right";
@@ -64,6 +65,7 @@ const columns: readonly Column[] = [
 ];
 
 interface DepartmentData {
+  id: number;
   departmentName: string;
   departmentCode: string;
   hodName: string;
@@ -71,70 +73,55 @@ interface DepartmentData {
   status: boolean;
 }
 
-function createData(
-  departmentName: string,
-  departmentCode: string,
-  hodName: string,
-  description: string,
-  status: boolean
-): DepartmentData {
-  return {
-    departmentName,
-    departmentCode,
-    hodName,
-    description,
-    status,
-  };
-}
 
-const rows: DepartmentData[] = [
-  createData(
-    "Computer Science",
-    "CSE",
-    "Dr. Rajesh Sharma",
-    "Handles Computer Science Programs",
-    true
-  ),
-  createData(
-    "Information Technology",
-    "IT",
-    "Dr. Sneha Patil",
-    "Information Technology Department",
-    true
-  ),
-  createData(
-    "Mechanical Engineering",
-    "ME",
-    "Dr. Amit Kumar",
-    "Mechanical Engineering Department",
-    false
-  ),
-  createData(
-    "Civil Engineering",
-    "CE",
-    "Dr. Vivek Joshi",
-    "Civil Engineering Department",
-    true
-  ),
-  createData(
-    "Electrical Engineering",
-    "EE",
-    "Dr. Rakesh Singh",
-    "Electrical Engineering Department",
-    true
-  ),
-];
-
-export default function DepartmentTable() {
+export default function DepartmentTable(
+  {
+    refresh
+  }: {
+    refresh: boolean
+  }
+) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [rows, setRows] = React.useState<DepartmentData[]>([]);
   const handleChangePage = (
     _event: unknown,
     newPage: number
   ) => {
     setPage(newPage);
   };
+
+  const loadDepartments = async()=>{
+
+    try{
+
+        const response = await getDepartments();
+
+        setRows(response);
+
+    }
+    catch(error){
+
+        console.log(error);
+
+    }
+
+};
+
+
+React.useEffect(()=>{
+
+    const fetchDepartments = async()=>{
+
+        await loadDepartments();
+
+    };
+
+
+    fetchDepartments();
+
+
+},[refresh]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -151,15 +138,40 @@ export default function DepartmentTable() {
     console.log("Edit Department", department);
   };
 
-  const handleDelete = (department: DepartmentData) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${department.departmentName}?`
-    );
+  const handleDelete = async(
+department: DepartmentData
+)=>{
 
-    if (confirmDelete) {
-      console.log("Deleted", department);
+
+const confirmDelete =
+window.confirm(
+`Are you sure you want to delete ${department.departmentName}?`
+);
+
+
+if(confirmDelete){
+
+    try{
+
+        await deleteDepartment(
+            department.id
+        );
+
+
+        loadDepartments();
+
+
     }
-  };
+    catch(error){
+
+        console.log(error);
+
+    }
+
+}
+
+
+};
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -190,8 +202,8 @@ export default function DepartmentTable() {
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage
               )
-              .map((row, index) => (
-                <TableRow hover key={index}>
+              .map((row) => (
+                <TableRow hover key={row.id}>
 
                   {columns.map((column) => (
 

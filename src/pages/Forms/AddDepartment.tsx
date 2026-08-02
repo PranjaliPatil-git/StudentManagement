@@ -9,14 +9,11 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import {
+  addDepartment,
+  type DepartmentRequest
+} from "../../services/departmentApi";
 
-type DepartmentData = {
-  departmentName: string;
-  departmentCode: string;
-  hodName: string;
-  description: string;
-  status: boolean;
-};
 
 const AddDepartment = () => {
   const navigate = useNavigate();
@@ -28,7 +25,7 @@ const AddDepartment = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<DepartmentData>({
+  } = useForm<DepartmentRequest>({
     defaultValues: {
       departmentName: "",
       departmentCode: "",
@@ -41,15 +38,31 @@ const AddDepartment = () => {
   // eslint-disable-next-line react-hooks/incompatible-library
   const status = watch("status");
 
-  const onSubmit = (data: DepartmentData) => {
-    console.log(data);
+  const onSubmit = async(data:DepartmentRequest)=>{
 
-    alert("Department Added Successfully");
+    try{
 
-    reset();
+        await addDepartment(data);
 
-    navigate("/departments");
-  };
+        alert(
+          "Department Added Successfully"
+        );
+
+        reset();
+
+        navigate("/department");
+
+
+    }catch(error){
+
+        console.log(error);
+
+        alert(
+          "Something went wrong"
+        );
+    }
+
+};
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>

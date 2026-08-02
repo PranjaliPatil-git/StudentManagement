@@ -21,7 +21,7 @@ import type { Student } from "../services/studentApi";
 
 
 interface Column {
-  id: "name" | "department" | "email" | "phone" | "joinDate" | "actions";
+  id: "name" | "departmentName" | "email" | "phone" | "joinDate" | "actions";
   label: string;
   minWidth?: number;
   align?: "left" | "center" | "right";
@@ -30,7 +30,7 @@ interface Column {
 
 const columns: readonly Column[] = [
   { id: "name", label: "Name", minWidth: 180 },
-  { id: "department", label: "Department", minWidth: 150 },
+  { id: "departmentName", label: "Department", minWidth: 150 },
   { id: "email", label: "Email", minWidth: 250 },
   { id: "phone", label: "Phone", minWidth: 150 },
   { id: "joinDate", label: "Join Date", minWidth: 150 },
@@ -206,7 +206,9 @@ export default function StudentTable() {
 
                               :
 
-                              row[column.id]
+                              column.id === "departmentName"
+                                ? row.department?.departmentName
+                                : row[column.id]
 
                           }
 

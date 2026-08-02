@@ -68,7 +68,7 @@ const StudentView = () => {
 
 
                     <Typography>
-                        Department : {student.department}
+                        Department : {student.department?.departmentName}
                     </Typography>
 
 

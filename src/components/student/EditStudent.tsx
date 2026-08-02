@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -19,6 +19,7 @@ import {
     updateStudent,
     type StudentRequest
 } from "../../services/studentApi";
+import { getDepartments, type DepartmentData } from "../../services/departmentApi";
 
 
 const EditStudent = () => {
@@ -28,18 +29,50 @@ const EditStudent = () => {
 
     const navigate = useNavigate();
 
+    const [departments, setDepartments] =
+        useState<DepartmentData[]>([]);
+
+    useEffect(() => {
+
+
+        const fetchDepartments = async () => {
+
+
+            try {
+
+                const data = await getDepartments();
+
+                setDepartments(data);
+
+
+            }
+            catch (error) {
+
+                console.log(error);
+
+            }
+
+
+        };
+
+
+        fetchDepartments();
+
+
+    }, []);
 
     const {
         register,
         handleSubmit,
         reset,
         control,
+        watch,
         formState: { errors }
 
     } = useForm<StudentRequest>({
         defaultValues: {
             name: "",
-            department: "",
+            departmentId: 0,
             email: "",
             phone: "",
             address: "",
@@ -49,33 +82,38 @@ const EditStudent = () => {
         }
     });
 
+    // eslint-disable-next-line react-hooks/incompatible-library
+    const values = watch();
+
+    console.log(values);
+
     useEffect(() => {
-
         if (id) {
-
             getStudentById(Number(id))
                 .then((res) => {
 
+                    console.log("API Response:", res.data);
+
                     const student = res.data;
 
-                    reset({
+                    const formData = {
                         name: student.name,
-                        department: student.department,
+                        departmentId: student.department.departmentId,
                         email: student.email,
                         phone: student.phone,
                         address: student.address,
                         gender: student.gender,
-                        joinDate: student.joinDate?.substring(0, 10),
+                        joinDate: student.joinDate.substring(0, 10),
                         parentContact: student.parentContact
-                    });
+                    };
+
+                    console.log("Form Data:", formData);
+
+                    reset(formData);
 
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
-
+                .catch(console.error);
         }
-
     }, [id, reset]);
 
 
@@ -156,18 +194,52 @@ const EditStudent = () => {
                         />
 
 
-                        <TextField
-                            label="Department"
-                            fullWidth
+                        <FormControl fullWidth>
 
-                            {...register("department", {
-                                required: "Department required"
-                            })}
+                            <InputLabel>
+                                Department
+                            </InputLabel>
 
-                            error={!!errors.department}
-                            helperText={errors.department?.message}
 
-                        />
+                            <Controller
+
+                                name="departmentId"
+
+                                control={control}
+
+                                rules={{
+                                    required: "Department required"
+                                }}
+
+                                render={({ field }) => (
+
+                                    <Select
+                                        {...field}
+                                        label="Department"
+                                    >
+
+
+                                        {
+                                            departments.map((dept) => (
+                                                <MenuItem
+                                                    key={dept.departmentId}
+                                                    value={dept.departmentId}
+                                                >
+                                                    {dept.departmentName}
+
+                                                </MenuItem>
+                                            ))
+                                        }
+
+
+                                    </Select>
+
+                                )}
+
+                            />
+
+
+                        </FormControl>
 
 
                     </Box>

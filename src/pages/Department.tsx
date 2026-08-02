@@ -19,15 +19,22 @@ import DepartmentTable from "../components/DepartmentTable";
 import AddDepartment from "./Forms/AddDepartment";
 
 const Department = () => {
+
     const [open, setOpen] = useState(false);
+
+    const [refresh, setRefresh] = useState(false);
 
     const handleOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
-    };
+
+    setOpen(false);
+
+    setRefresh(prev => !prev);
+
+};
 
     return (
         <Box sx={{ boxShadow: 3, p: 4, borderRadius: 2 }}>
@@ -68,7 +75,7 @@ const Department = () => {
                 }}
             />
 
-            <DepartmentTable />
+            <DepartmentTable refresh={refresh}/>
 
             <Dialog
                 open={open}
