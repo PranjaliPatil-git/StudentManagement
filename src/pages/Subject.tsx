@@ -1,8 +1,14 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import AttendanceTable from "../components/AttendanceTable";
+import {
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
 
-const Attendance = () => {
+import { useNavigate } from "react-router-dom";
+
+import SubjectTable from "../components/SubjectTable";
+
+const Subject = () => {
 
   const navigate = useNavigate();
 
@@ -14,6 +20,7 @@ const Attendance = () => {
         borderRadius: 2,
       }}
     >
+
       {/* Header */}
 
       <Box
@@ -23,29 +30,32 @@ const Attendance = () => {
           mb: 3,
         }}
       >
+
         <Typography
           variant="h5"
           sx={{
             fontWeight: 700,
           }}
         >
-          Attendance Management
+          Subject Management
         </Typography>
 
         <Button
           variant="contained"
           sx={{ ml: "auto" }}
-          onClick={() => navigate("/add-attendance")}
+          onClick={() => navigate("/add-subject")}
         >
-          + Add Attendance
+          + Add Subject
         </Button>
+
       </Box>
 
-      {/* Attendance Table */}
+      {/* Subject Table */}
 
-      <AttendanceTable />
+      <SubjectTable />
+
     </Box>
   );
 };
 
-export default Attendance;
+export default Subject;

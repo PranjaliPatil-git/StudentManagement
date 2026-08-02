@@ -8,9 +8,10 @@ const Student = () => {
 
   return (
     <Box sx={{ boxShadow: 3, p: 4 }}>
-      <Box sx={{ display: "flex" ,mb: 2, gap: 100 }}>
+      <Box sx={{ display: "flex" ,mb: 2 }}>
         <Typography sx={{ mb: 2, fontWeight: "bold" }}>Student Details</Typography>
         <Button type="submit"
+        sx={{ml: "auto"}}
           variant="contained" onClick={() => navigate("/add-student")}>+ Add Student</Button>
       </Box>
       <StudentTable />

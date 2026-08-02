@@ -8,9 +8,10 @@ const Fees = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ boxShadow: 3, p: 4 }}>
-      <Box sx={{ display: "flex" ,mb: 2, gap: 95 }}>
+      <Box sx={{ display: "flex" ,mb: 2}}>
         <Typography sx={{ mb: 2, fontWeight: "bold" }}>Student Fee Details</Typography>
         <Button type="submit"
+        sx={{ml: "auto"}}
           variant="contained" onClick={() => navigate("/add-student-fees")}>+ Add Student Fee</Button>
       </Box>
       <StudentFeeTable />

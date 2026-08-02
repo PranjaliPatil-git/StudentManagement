@@ -35,6 +35,7 @@ const AddFeeDetails = () => {
         },
     });
 
+    // eslint-disable-next-line react-hooks/incompatible-library
     const totalFee = watch("totalFee") || 0;
     const paidAmount = watch("paidAmount") || 0;
 

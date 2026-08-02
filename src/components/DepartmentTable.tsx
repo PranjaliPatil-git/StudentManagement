@@ -9,84 +9,123 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Chip from "@mui/material/Chip";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Column {
-  id: "name" | "department" | "email" | "phone" | "joinDate" | "actions";
+  id:
+    | "departmentName"
+    | "departmentCode"
+    | "hodName"
+    | "description"
+    | "status"
+    | "actions";
   label: string;
   minWidth?: number;
   align?: "left" | "center" | "right";
 }
 
 const columns: readonly Column[] = [
-  { id: "name", label: "Name", minWidth: 180 },
-  { id: "department", label: "Department", minWidth: 150 },
-  { id: "email", label: "Email", minWidth: 250 },
-  { id: "phone", label: "Phone", minWidth: 150 },
-  { id: "joinDate", label: "Join Date", minWidth: 150 },
-  { id: "actions", label: "Actions", minWidth: 150, align: "center" },
+  {
+    id: "departmentName",
+    label: "Department Name",
+    minWidth: 220,
+  },
+  {
+    id: "departmentCode",
+    label: "Department Code",
+    minWidth: 150,
+  },
+  {
+    id: "hodName",
+    label: "HOD Name",
+    minWidth: 180,
+  },
+  {
+    id: "description",
+    label: "Description",
+    minWidth: 280,
+  },
+  {
+    id: "status",
+    label: "Status",
+    minWidth: 120,
+    align: "center",
+  },
+  {
+    id: "actions",
+    label: "Actions",
+    minWidth: 150,
+    align: "center",
+  },
 ];
 
-interface Data {
-  name: string;
-  department: string;
-  email: string;
-  phone: string;
-  joinDate: string;
+interface DepartmentData {
+  departmentName: string;
+  departmentCode: string;
+  hodName: string;
+  description: string;
+  status: boolean;
 }
 
 function createData(
-  name: string,
-  department: string,
-  email: string,
-  phone: string,
-  joinDate: string
-): Data {
-  return { name, department, email, phone, joinDate };
+  departmentName: string,
+  departmentCode: string,
+  hodName: string,
+  description: string,
+  status: boolean
+): DepartmentData {
+  return {
+    departmentName,
+    departmentCode,
+    hodName,
+    description,
+    status,
+  };
 }
 
-const rows: Data[] = [
+const rows: DepartmentData[] = [
   createData(
-    "Pranjali Patil",
-    "Electrical",
-    "pranjali@gmail.com",
-    "9876543210",
-    "01-01-2026"
-  ),
-  createData(
-    "Aman Sharma",
-    "IT",
-    "aman@gmail.com",
-    "9876543211",
-    "15-02-2026"
-  ),
-  createData(
-    "Raj Verma",
     "Computer Science",
-    "raj@gmail.com",
-    "9876543212",
-    "10-03-2026"
+    "CSE",
+    "Dr. Rajesh Sharma",
+    "Handles Computer Science Programs",
+    true
   ),
   createData(
-    "Sneha Patil",
-    "Engineering",
-    "sneha@gmail.com",
-    "9876543213",
-    "20-04-2026"
+    "Information Technology",
+    "IT",
+    "Dr. Sneha Patil",
+    "Information Technology Department",
+    true
   ),
   createData(
-    "Rohan Singh",
-    "Sales",
-    "rohan@gmail.com",
-    "9876543214",
-    "12-05-2026"
+    "Mechanical Engineering",
+    "ME",
+    "Dr. Amit Kumar",
+    "Mechanical Engineering Department",
+    false
+  ),
+  createData(
+    "Civil Engineering",
+    "CE",
+    "Dr. Vivek Joshi",
+    "Civil Engineering Department",
+    true
+  ),
+  createData(
+    "Electrical Engineering",
+    "EE",
+    "Dr. Rakesh Singh",
+    "Electrical Engineering Department",
+    true
   ),
 ];
 
-export default function StudentTable() {
+export default function DepartmentTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -104,10 +143,29 @@ export default function StudentTable() {
     setPage(0);
   };
 
+  const handleView = (department: DepartmentData) => {
+    console.log("View Department", department);
+  };
+
+  const handleEdit = (department: DepartmentData) => {
+    console.log("Edit Department", department);
+  };
+
+  const handleDelete = (department: DepartmentData) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${department.departmentName}?`
+    );
+
+    if (confirmDelete) {
+      console.log("Deleted", department);
+    }
+  };
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 500 }}>
+      <TableContainer sx={{ maxHeight: 520 }}>
         <Table stickyHeader>
+
           <TableHead>
             <TableRow>
               {columns.map((column) => (
@@ -115,9 +173,9 @@ export default function StudentTable() {
                   key={column.id}
                   align={column.align}
                   sx={{
-                    fontWeight: "bold",
                     backgroundColor: "#1976d2",
-                    color: "white",
+                    color: "#fff",
+                    fontWeight: "bold",
                   }}
                 >
                   {column.label}
@@ -128,17 +186,36 @@ export default function StudentTable() {
 
           <TableBody>
             {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
               .map((row, index) => (
                 <TableRow hover key={index}>
+
                   {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align}>
-                      {column.id === "actions" ? (
+
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                    >
+
+                      {column.id === "status" ? (
+                        <Chip
+                          label={
+                            row.status ? "Active" : "Inactive"
+                          }
+                          color={
+                            row.status ? "success" : "error"
+                          }
+                          size="small"
+                        />
+                      ) : column.id === "actions" ? (
                         <>
                           <Tooltip title="View">
                             <IconButton
                               color="primary"
-                              onClick={() => console.log("View", row)}
+                              onClick={() => handleView(row)}
                             >
                               <VisibilityIcon />
                             </IconButton>
@@ -147,7 +224,7 @@ export default function StudentTable() {
                           <Tooltip title="Edit">
                             <IconButton
                               color="success"
-                              onClick={() => console.log("Edit", row)}
+                              onClick={() => handleEdit(row)}
                             >
                               <EditIcon />
                             </IconButton>
@@ -156,29 +233,32 @@ export default function StudentTable() {
                           <Tooltip title="Delete">
                             <IconButton
                               color="error"
-                              onClick={() => console.log("Delete", row)}
+                              onClick={() => handleDelete(row)}
                             >
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
                         </>
                       ) : (
-                        row[column.id as keyof Data]
+                        row[column.id as keyof DepartmentData]
                       )}
+
                     </TableCell>
+
                   ))}
                 </TableRow>
               ))}
           </TableBody>
+
         </Table>
       </TableContainer>
 
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
         component="div"
+        rowsPerPageOptions={[5, 10, 25]}
         count={rows.length}
-        rowsPerPage={rowsPerPage}
         page={page}
+        rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

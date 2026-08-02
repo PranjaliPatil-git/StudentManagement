@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,112 +8,162 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Column {
-  id: "name" | "department" | "email" | "phone" | "totalFee" | "paidAmount" | "paidDate" | "paymentType" | "actions";
+  id:
+    | "studentName"
+    | "rollNo"
+    | "department"
+    | "subject"
+    | "faculty"
+    | "date"
+    | "status"
+    | "actions";
+
   label: string;
   minWidth?: number;
   align?: "left" | "center" | "right";
 }
 
 const columns: readonly Column[] = [
-  { id: "name", label: "Name", minWidth: 180 },
-  { id: "department", label: "Department", minWidth: 150 },
-  { id: "email", label: "Email", minWidth: 250 },
-  { id: "phone", label: "Phone", minWidth: 150 },
-  { id: "totalFee", label: "Total Fee", minWidth: 150 },
-  { id: "paidAmount", label: "Paid Amount", minWidth: 150 },
-  { id: "paidDate", label: "Paid Date", minWidth: 150 },
-  { id: "paymentType", label: "Payment Type", minWidth: 150 },
-  { id: "actions", label: "Actions", minWidth: 150, align: "center" },
+  {
+    id: "studentName",
+    label: "Student Name",
+    minWidth: 220,
+  },
+  {
+    id: "rollNo",
+    label: "Roll No",
+    minWidth: 120,
+  },
+  {
+    id: "department",
+    label: "Department",
+    minWidth: 200,
+  },
+  {
+    id: "subject",
+    label: "Subject",
+    minWidth: 180,
+  },
+  {
+    id: "faculty",
+    label: "Faculty",
+    minWidth: 180,
+  },
+  {
+    id: "date",
+    label: "Attendance Date",
+    minWidth: 150,
+  },
+  {
+    id: "status",
+    label: "Status",
+    minWidth: 120,
+    align: "center",
+  },
+  {
+    id: "actions",
+    label: "Actions",
+    minWidth: 150,
+    align: "center",
+  },
 ];
 
-interface Data {
-  name: string;
+interface AttendanceData {
+  studentName: string;
+  rollNo: string;
   department: string;
-  email: string;
-  phone: string;
-  totalFee: number;
-  paidAmount: number;
-  paidDate: string;
-  paymentType: string
+  subject: string;
+  faculty: string;
+  date: string;
+  status: string;
 }
 
 function createData(
-  name: string,
+  studentName: string,
+  rollNo: string,
   department: string,
-  email: string,
-  phone: string,
-  totalFee: number,
-  paidAmount: number,
-  paidDate: string,
-  paymentType: string
-): Data {
-  return { name, department, email, phone, totalFee, paidAmount, paidDate, paymentType };
+  subject: string,
+  faculty: string,
+  date: string,
+  status: string
+): AttendanceData {
+  return {
+    studentName,
+    rollNo,
+    department,
+    subject,
+    faculty,
+    date,
+    status,
+  };
 }
 
-const rows: Data[] = [
+const rows: AttendanceData[] = [
   createData(
     "Pranjali Patil",
-    "Electrical",
-    "pranjali@gmail.com",
-    "9876543210",
-    40000,
-    20000,
-    "01-01-2026",
-    "Cash"
-  ),
-  createData(
-    "Aman Sharma",
-    "IT",
-    "aman@gmail.com",
-    "9876543211",
-    50000,
-    20000,
-    "15-02-2026",
-    "Online"
-  ),
-  createData(
-    "Raj Verma",
+    "CS101",
     "Computer Science",
-    "raj@gmail.com",
-    "9876543212",
-    40000,
-    15000,
-    "10-03-2026",
-    "Cash"
+    "Java",
+    "Mr. Sharma",
+    "01-08-2026",
+    "Present"
   ),
+
   createData(
-    "Sneha Patil",
-    "Engineering",
-    "sneha@gmail.com",
-    "9876543213",
-    40000,
-    10000,
-    "20-04-2026",
-    "Online"
+    "Rahul Patil",
+    "CS102",
+    "Computer Science",
+    "Spring Boot",
+    "Mr. Sharma",
+    "01-08-2026",
+    "Absent"
   ),
+
   createData(
-    "Rohan Singh",
-    "Sales",
-    "rohan@gmail.com",
-    "9876543214",
-    50000,
-    25000,
-    "12-05-2026",
-    "Cash"
+    "Sneha Kulkarni",
+    "IT201",
+    "Information Technology",
+    "React JS",
+    "Mrs. Joshi",
+    "01-08-2026",
+    "Late"
+  ),
+
+  createData(
+    "Aman Singh",
+    "ME301",
+    "Mechanical",
+    "CAD",
+    "Mr. Patil",
+    "01-08-2026",
+    "Present"
+  ),
+
+  createData(
+    "Rohan Sharma",
+    "CE401",
+    "Civil",
+    "Surveying",
+    "Mr. Deshmukh",
+    "01-08-2026",
+    "Half Day"
   ),
 ];
 
-export default function StudentFeeTable() {
+export default function AttendanceTable() {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [rowsPerPage, setRowsPerPage] =
+    React.useState(5);
 
   const handleChangePage = (
     _event: unknown,
@@ -128,57 +179,77 @@ export default function StudentFeeTable() {
     setPage(0);
   };
 
-  const handleView = (student: Data) => {
-    console.log("View Student:", student);
-    // navigate(`/student/${student.id}`);
+  const handleView = (attendance: AttendanceData) => {
+    console.log("View", attendance);
   };
 
-  const handleEdit = (student: Data) => {
-    console.log("Edit Student:", student);
-    // navigate(`/edit-student/${student.id}`);
+  const handleEdit = (attendance: AttendanceData) => {
+    console.log("Edit", attendance);
   };
 
-  const handleDelete = (student: Data) => {
+  const handleDelete = (attendance: AttendanceData) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${student.name}?`
+      `Delete attendance of ${attendance.studentName}?`
     );
 
     if (confirmDelete) {
-      console.log("Deleted:", student);
-      // Call delete API here
+      console.log("Deleted", attendance);
     }
   };
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 500 }}>
+      <TableContainer sx={{ maxHeight: 520 }}>
         <Table stickyHeader>
+
           <TableHead>
             <TableRow>
+
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
                   sx={{
-                    fontWeight: "bold",
                     backgroundColor: "#1976d2",
-                    color: "white",
+                    color: "#fff",
+                    fontWeight: 700,
                   }}
                 >
                   {column.label}
                 </TableCell>
               ))}
+
             </TableRow>
           </TableHead>
 
           <TableBody>
+
             {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
               .map((row, index) => (
-                <TableRow hover key={index}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align}>
-                      {column.id === "actions" ? (
+                <TableRow hover key={index}>                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                    >
+                      {column.id === "status" ? (
+                        <Chip
+                          label={row.status}
+                          color={
+                            row.status === "Present"
+                              ? "success"
+                              : row.status === "Absent"
+                              ? "error"
+                              : row.status === "Late"
+                              ? "warning"
+                              : "info"
+                          }
+                          size="small"
+                        />
+                      ) : column.id === "actions" ? (
                         <>
                           <Tooltip title="View">
                             <IconButton
@@ -208,25 +279,27 @@ export default function StudentFeeTable() {
                           </Tooltip>
                         </>
                       ) : (
-                        row[column.id as keyof Data]
+                        row[column.id as keyof AttendanceData]
                       )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
           </TableBody>
+
         </Table>
       </TableContainer>
 
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
         component="div"
+        rowsPerPageOptions={[5, 10, 25]}
         count={rows.length}
-        rowsPerPage={rowsPerPage}
         page={page}
+        rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
     </Paper>
   );
 }

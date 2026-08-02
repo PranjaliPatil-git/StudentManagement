@@ -13,6 +13,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import SchoolIcon from "@mui/icons-material/School";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import LogoutIcon from "@mui/icons-material/Logout";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -38,6 +39,16 @@ const menuItems = [
         text: "Fees",
         icon: <PaymentsIcon />,
         path: "/fees",
+    },
+    {
+        text: "Department",
+        icon: <PaymentsIcon />,
+        path: "/department",
+    },
+     {
+        text: "Subject",
+        icon: <MenuBookIcon />,
+        path: "/subjects",
     },
     {
         text: "Logout",
