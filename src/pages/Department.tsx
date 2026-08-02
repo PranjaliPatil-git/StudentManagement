@@ -40,10 +40,7 @@ const Department = () => {
                     mb: 3,
                 }}
             >
-                <Typography
-                    variant="h5"
-                    sx={{ fontWeight: "bold" }}
-                >
+                <Typography sx={{ mb: 2, fontWeight: "bold" }}>
                     Department Management
                 </Typography>
 

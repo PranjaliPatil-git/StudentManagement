@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
-
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ResultTable from "../components/ResultTable";
 
-import SubjectTable from "../components/SubjectTable";
-
-const Subject = () => {
+const Result = () => {
 
   const navigate = useNavigate();
 
@@ -20,9 +14,6 @@ const Subject = () => {
         borderRadius: 2,
       }}
     >
-
-      {/* Header */}
-
       <Box
         sx={{
           display: "flex",
@@ -30,26 +21,25 @@ const Subject = () => {
           mb: 3,
         }}
       >
-        <Typography sx={{ mb: 2, fontWeight: "bold" }}>
-          Subject Management
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 700 }}
+        >
+          Student Results
         </Typography>
 
         <Button
           variant="contained"
           sx={{ ml: "auto" }}
-          onClick={() => navigate("/add-subject")}
+          onClick={() => navigate("/add-result")}
         >
-          + Add Subject
+          + Add Result
         </Button>
-
       </Box>
 
-      {/* Subject Table */}
-
-      <SubjectTable />
-
+      <ResultTable />
     </Box>
   );
 };
 
-export default Subject;
+export default Result;

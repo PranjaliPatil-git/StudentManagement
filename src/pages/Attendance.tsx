@@ -23,12 +23,7 @@ const Attendance = () => {
           mb: 3,
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 700,
-          }}
-        >
+        <Typography sx={{ mb: 2, fontWeight: "bold" }}>
           Attendance Management
         </Typography>
 

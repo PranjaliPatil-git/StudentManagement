@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
-
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import SalaryTable from "../components/SalaryTable";
 
-import SubjectTable from "../components/SubjectTable";
-
-const Subject = () => {
+const Salary = () => {
 
   const navigate = useNavigate();
 
@@ -20,9 +14,6 @@ const Subject = () => {
         borderRadius: 2,
       }}
     >
-
-      {/* Header */}
-
       <Box
         sx={{
           display: "flex",
@@ -31,25 +22,21 @@ const Subject = () => {
         }}
       >
         <Typography sx={{ mb: 2, fontWeight: "bold" }}>
-          Subject Management
+          Salary Management
         </Typography>
 
         <Button
           variant="contained"
           sx={{ ml: "auto" }}
-          onClick={() => navigate("/add-subject")}
+          onClick={() => navigate("/add-salary")}
         >
-          + Add Subject
+          + Add Salary
         </Button>
-
       </Box>
 
-      {/* Subject Table */}
-
-      <SubjectTable />
-
+      <SalaryTable />
     </Box>
   );
 };
 
-export default Subject;
+export default Salary;

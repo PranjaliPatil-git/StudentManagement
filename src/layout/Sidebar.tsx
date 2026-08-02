@@ -14,6 +14,13 @@ import SchoolIcon from "@mui/icons-material/School";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import BadgeIcon from "@mui/icons-material/Badge";
+import DomainIcon from "@mui/icons-material/Domain";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import QuizIcon from "@mui/icons-material/Quiz";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -31,9 +38,24 @@ const menuItems = [
         path: "/student",
     },
     {
-        text: "Attendance",
+        text: "Faculty",
+        icon: <BadgeIcon />,
+        path: "/faculty",
+    },
+    {
+        text: "Student Attendance",
         icon: <SchoolIcon />,
         path: "/attendance",
+    },
+    {
+        text: "Faculty Attendance",
+        icon: <FactCheckIcon />,
+        path: "/faculty-attendance",
+    },
+    {
+        text: "Faculty Salary",
+        icon: <CurrencyRupeeIcon />,
+        path: "/salary",
     },
     {
         text: "Fees",
@@ -41,14 +63,29 @@ const menuItems = [
         path: "/fees",
     },
     {
+        text: "Examination",
+        icon: <QuizIcon />,
+        path: "/examination",
+    },
+    {
+        text: "Result",
+        icon: <EmojiEventsIcon />,
+        path: "/result",
+    },
+    {
         text: "Department",
-        icon: <PaymentsIcon />,
+        icon: <DomainIcon />,
         path: "/department",
     },
-     {
+    {
         text: "Subject",
         icon: <MenuBookIcon />,
         path: "/subjects",
+    },
+    {
+        text: "Timetable",
+        icon: <CalendarMonthIcon />,
+        path: "/timetable",
     },
     {
         text: "Logout",

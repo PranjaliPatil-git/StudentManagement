@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
-
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import FacultyAttendanceTable from "../components/FacultyAttendanceTable";
 
-import SubjectTable from "../components/SubjectTable";
-
-const Subject = () => {
+const FacultyAttendance = () => {
 
   const navigate = useNavigate();
 
@@ -20,7 +14,6 @@ const Subject = () => {
         borderRadius: 2,
       }}
     >
-
       {/* Header */}
 
       <Box
@@ -31,25 +24,24 @@ const Subject = () => {
         }}
       >
         <Typography sx={{ mb: 2, fontWeight: "bold" }}>
-          Subject Management
+          Faculty Attendance
         </Typography>
 
         <Button
           variant="contained"
           sx={{ ml: "auto" }}
-          onClick={() => navigate("/add-subject")}
+          onClick={() => navigate("/add-faculty-attendance")}
         >
-          + Add Subject
+          + Add Faculty Attendance
         </Button>
-
       </Box>
 
-      {/* Subject Table */}
+      {/* Attendance Table */}
 
-      <SubjectTable />
+      <FacultyAttendanceTable />
 
     </Box>
   );
 };
 
-export default Subject;
+export default FacultyAttendance;
