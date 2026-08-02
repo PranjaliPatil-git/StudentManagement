@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Student from "./pages/Student";
 import Attendance from "./pages/Attendance";
@@ -26,6 +26,8 @@ import Examination from "./pages/Examination";
 import AddExamination from "./pages/Forms/AddExamination";
 import AddResult from "./pages/Forms/AddResult";
 import Result from "./pages/Result";
+import StudentView from "./components/student/StudentView";
+import EditStudent from "./components/student/EditStudent"
 
 const App = () => {
   return (
@@ -41,6 +43,8 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/student" element={<Student />} />
           <Route path="/add-student" element={<AddStudent />} />
+          <Route path="/student-view/:id" element={<StudentView />} />
+          <Route path="/student-edit/:id" element={<EditStudent />} />
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/add-attendance" element={<AddAttendance />} />
           <Route path="/faculty" element={<Faculty />} />

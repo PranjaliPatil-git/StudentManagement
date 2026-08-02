@@ -1,52 +1,86 @@
-import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
+
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+import {
+    addStudent,
+    type StudentRequest
+} from "../../services/studentApi";
 
-type StudentData = {
-    name: string;
-    department: string;
-    email: string;
-    phone: string;
-    address: string;
-    gender: string;
-    joinDate: string;
-    parentContact: string
-}
 
 const AddStudent = () => {
+
 
     const {
         register,
         handleSubmit,
         reset,
-        formState: { errors },
-    } = useForm<StudentData>({
-        defaultValues: {
-            name: "",
-            department: "",
-            email: "",
-            phone: "",
-            address: "",
-            gender: "",
-            joinDate: "",
-            parentContact: ""
-        },
+        formState:{errors},
+    } = useForm<StudentRequest>({
+
+        defaultValues:{
+            name:"",
+            department:"",
+            email:"",
+            phone:"",
+            address:"",
+            gender:"",
+            joinDate:"",
+            parentContact:""
+        }
+
     });
 
-    const navigate = useNavigate();
-    // const password = watch("password");
 
-    const onRegister = (data: StudentData) => {
-        console.log(data);
-        alert("Student Added Successful")
-        reset();
-        navigate("/studnet");
+
+    const navigate = useNavigate();
+
+
+
+    const onAddStud = async(data:StudentRequest)=>{
+
+
+        try{
+
+            await addStudent(data);
+
+
+            alert("Student Added Successfully");
+
+
+            reset();
+
+
+            navigate("/student");
+
+
+        }
+        catch(error){
+
+            console.log(error);
+
+            alert("Failed to add student");
+
+        }
+
+
     }
 
 
     return (
-        <Box component="form" onSubmit={handleSubmit(onRegister)} noValidate>
+        <Box component="form" onSubmit={handleSubmit(onAddStud)} noValidate>
             <Box sx={{ boxShadow: 3, p: 4 }}>
                 <Typography sx={{ mb: 2, fontWeight: "bold" }}>Add Student Form</Typography>
 

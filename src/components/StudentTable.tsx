@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,6 +14,11 @@ import Tooltip from "@mui/material/Tooltip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
+import { getStudents, deleteStudent } from "../services/studentApi";
+import type { Student } from "../services/studentApi";
+
+
 
 interface Column {
   id: "name" | "department" | "email" | "phone" | "joinDate" | "actions";
@@ -20,6 +26,7 @@ interface Column {
   minWidth?: number;
   align?: "left" | "center" | "right";
 }
+
 
 const columns: readonly Column[] = [
   { id: "name", label: "Name", minWidth: 180 },
@@ -30,79 +37,94 @@ const columns: readonly Column[] = [
   { id: "actions", label: "Actions", minWidth: 150, align: "center" },
 ];
 
-interface Data {
-  name: string;
-  department: string;
-  email: string;
-  phone: string;
-  joinDate: string;
-}
 
-function createData(
-  name: string,
-  department: string,
-  email: string,
-  phone: string,
-  joinDate: string
-): Data {
-  return { name, department, email, phone, joinDate };
-}
 
-const rows: Data[] = [
-  createData(
-    "Pranjali Patil",
-    "Electrical",
-    "pranjali@gmail.com",
-    "9876543210",
-    "01-01-2026"
-  ),
-  createData(
-    "Aman Sharma",
-    "IT",
-    "aman@gmail.com",
-    "9876543211",
-    "15-02-2026"
-  ),
-  createData(
-    "Raj Verma",
-    "Computer Science",
-    "raj@gmail.com",
-    "9876543212",
-    "10-03-2026"
-  ),
-  createData(
-    "Sneha Patil",
-    "Engineering",
-    "sneha@gmail.com",
-    "9876543213",
-    "20-04-2026"
-  ),
-  createData(
-    "Rohan Singh",
-    "Sales",
-    "rohan@gmail.com",
-    "9876543214",
-    "12-05-2026"
-  ),
-];
 
 export default function StudentTable() {
+
+
+  const navigate = useNavigate();
+
+  const [rows, setRows] = React.useState<Student[]>([]);
+
   const [page, setPage] = React.useState(0);
+
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+
+
+  React.useEffect(() => {
+
+
+    getStudents()
+      .then((response) => {
+
+        setRows(response.data);
+
+      })
+      .catch((error) => {
+
+        console.log(error);
+
+      });
+
+
+  }, []);
+
+
+
+
+  const handleDelete = async (id: number) => {
+
+
+    try {
+
+      await deleteStudent(id);
+
+
+      setRows(prev =>
+        prev.filter(student => student.id !== id)
+      );
+
+
+    }
+    catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+
+
+
 
   const handleChangePage = (
     _event: unknown,
     newPage: number
   ) => {
+
     setPage(newPage);
+
   };
+
+
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
+
+    setRowsPerPage(
+      Number(event.target.value)
+    );
+
     setPage(0);
+
   };
+
+
+
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -110,78 +132,134 @@ export default function StudentTable() {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  sx={{
-                    fontWeight: "bold",
-                    backgroundColor: "#1976d2",
-                    color: "white",
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
+              {
+                columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    sx={{
+                      fontWeight: "bold",
+                      backgroundColor: "#1976d2",
+                      color: "white"
+                    }}>
+                    {column.label}
+                  </TableCell>
+                ))
+              }
             </TableRow>
           </TableHead>
-
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
-                <TableRow hover key={index}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align}>
-                      {column.id === "actions" ? (
-                        <>
-                          <Tooltip title="View">
-                            <IconButton
-                              color="primary"
-                              onClick={() => console.log("View", row)}
-                            >
-                              <VisibilityIcon />
-                            </IconButton>
-                          </Tooltip>
+            {
+              rows
+                .slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+                .map((row) => (
+                  <TableRow hover key={row.id}>
+                    {
+                      columns.map((column) => (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                        >
+                          {
+                            column.id === "actions"
+                              ?
+                              <>
+                                <Tooltip title="View">
+                                  <IconButton
+                                    color="primary"
+                                    onClick={() => navigate(`/student-view/${row.id}`)}
+                                  >
+                                    <VisibilityIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Edit">
+                                  <IconButton
+                                    color="success"
+                                    onClick={() =>
+                                      navigate(`/student-edit/${row.id}`)
+                                    }
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Delete">
 
-                          <Tooltip title="Edit">
-                            <IconButton
-                              color="success"
-                              onClick={() => console.log("Edit", row)}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
+                                  <IconButton
+                                    color="error"
+                                    onClick={() => handleDelete(row.id!)}
+                                  >
 
-                          <Tooltip title="Delete">
-                            <IconButton
-                              color="error"
-                              onClick={() => console.log("Delete", row)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </>
-                      ) : (
-                        row[column.id as keyof Data]
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+                                    <DeleteIcon />
+
+                                  </IconButton>
+
+
+                                </Tooltip>
+
+
+
+                              </>
+
+
+                              :
+
+                              row[column.id]
+
+                          }
+
+
+
+                        </TableCell>
+
+
+                      ))
+                    }
+
+
+
+                  </TableRow>
+
+
+                ))
+            }
+
+
+
           </TableBody>
+
+
         </Table>
+
+
       </TableContainer>
 
+
+
       <TablePagination
+
         rowsPerPageOptions={[5, 10, 25]}
+
         component="div"
+
         count={rows.length}
+
         rowsPerPage={rowsPerPage}
+
         page={page}
+
         onPageChange={handleChangePage}
+
         onRowsPerPageChange={handleChangeRowsPerPage}
+
       />
+
+
     </Paper>
+
+
   );
+
 }

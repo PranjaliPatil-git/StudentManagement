@@ -1,8 +1,9 @@
 import { Box, Button, Link, Stack, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../services/AuthApi';
 
-type RegisterData = {
+type RegisterData ={
   name: string;
   department: string;
   email: string;
@@ -11,6 +12,7 @@ type RegisterData = {
   password: string;
   confirmPassword: string;
 }
+
 
 const Register = () => {
 
@@ -35,11 +37,27 @@ const Register = () => {
   const navigate = useNavigate();
   // const password = watch("password");
 
-  const onRegister = (data: RegisterData) => {
-    console.log(data);
-    alert("Registration Successful")
-    reset();
-    navigate("/");
+  const onRegister = async (data: RegisterData) => {
+
+    try {
+
+      await registerUser(data);
+
+      alert("Registration Successful");
+
+      reset();
+
+      navigate("/");
+
+
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    catch (error) {
+
+      alert("Registration Failed");
+
+    }
+
   }
 
   return (
@@ -101,9 +119,9 @@ const Register = () => {
             </Box>
             <Box sx={{ display: "flex", gap: 3 }}>
               <TextField label="Address" fullWidth
-               {...register("address", {
+                {...register("address", {
                   required: "Address is required",
-                })} error={!!errors.address} helperText={errors.address?.message}  />
+                })} error={!!errors.address} helperText={errors.address?.message} />
             </Box>
             <Box sx={{ display: "flex", gap: 3 }}>
               <TextField label="Password" type='password' fullWidth

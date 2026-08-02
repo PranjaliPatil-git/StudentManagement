@@ -1,12 +1,9 @@
 import { Box, TextField, Typography, Button, Stack, Link } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { loginUser, type LoginData } from '../../services/AuthApi';
 
-type LoginData = {
-  name: string;
-  email: string;
-  password: string;
-};
+
 const Login = () => {
 
   const {
@@ -16,20 +13,50 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginData>({
     defaultValues: {
-      name: "",
       email: "",
-      password: "",
-    },
-  });
+      password: ""
+    }
+  })
 
   const navigate = useNavigate();
 
-  const onLogin = (data: LoginData) => {
-    console.log(data);
-    alert("Login Successful");
-     localStorage.setItem("userName", data.name);
-      localStorage.setItem("accessToken", "dummy-token");
-    reset();
+  const onLogin = async (data: LoginData) => {
+
+    try {
+
+      const response = await loginUser(data);
+
+
+      localStorage.setItem(
+        "accessToken",
+        response.data.token
+      );
+
+
+      localStorage.setItem(
+        "userName",
+        response.data.name
+      );
+
+
+      alert("Login Successful");
+
+
+      reset();
+
+
+      navigate("/dashboard");
+
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+
+
+      alert("Invalid email or password");
+
+
+    }
+
   };
 
   return (
@@ -61,10 +88,6 @@ const Login = () => {
           </Typography>
 
           <Stack spacing={2}>
-            <TextField label="Name" fullWidth
-              {...register("name", {
-                required: "Name is required",
-              })} error={!!errors.name} helperText={errors.name?.message} />
             <TextField label="Email" type="email" fullWidth
               {...register("email", {
                 required: "Email is required",
@@ -81,7 +104,7 @@ const Login = () => {
                   message: "Password must be at least 8 characters",
                 },
                 maxLength: {
-                  value:15,
+                  value: 15,
                   message: "Password must be only 15 characters"
                 }
               })} error={!!errors.password} helperText={errors.password?.message} />
@@ -89,7 +112,6 @@ const Login = () => {
               type="submit"
               variant="contained"
               fullWidth
-              onClick={() => navigate("/dashboard")}
             >
               Login
             </Button>
