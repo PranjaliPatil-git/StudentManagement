@@ -6,10 +6,9 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-import SubjectTable from "../components/subject/SubjectTable";
+import CourseTable from "../components/course/CourseTable";
 
-const Subject = () => {
-
+const Course = () => {
   const navigate = useNavigate();
 
   return (
@@ -20,9 +19,6 @@ const Subject = () => {
         borderRadius: 2,
       }}
     >
-
-      {/* Header */}
-
       <Box
         sx={{
           display: "flex",
@@ -30,26 +26,29 @@ const Subject = () => {
           mb: 3,
         }}
       >
-        <Typography sx={{ mb: 2, fontWeight: "bold" }}>
-          Subject Management
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            fontSize: 22,
+          }}
+        >
+          Course Management
         </Typography>
 
         <Button
           variant="contained"
           sx={{ ml: "auto" }}
-          onClick={() => navigate("/add-subject")}
+          onClick={() =>
+            navigate("/add-course")
+          }
         >
-          + Add Subject
+          + Add Course
         </Button>
-
       </Box>
 
-      {/* Subject Table */}
-
-      <SubjectTable />
-
+      <CourseTable />
     </Box>
   );
 };
 
-export default Subject;
+export default Course;

@@ -21,6 +21,7 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import QuizIcon from "@mui/icons-material/Quiz";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -76,6 +77,11 @@ const menuItems = [
         text: "Department",
         icon: <DomainIcon />,
         path: "/department",
+    },
+    {
+        text: "Course",
+        icon: <LibraryBooksIcon />,
+        path: "/course",
     },
     {
         text: "Subject",

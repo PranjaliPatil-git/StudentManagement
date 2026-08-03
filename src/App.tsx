@@ -28,6 +28,12 @@ import AddResult from "./pages/Forms/AddResult";
 import Result from "./pages/Result";
 import StudentView from "./components/student/StudentView";
 import EditStudent from "./components/student/EditStudent"
+import Course from "./pages/Course";
+import AddCourse from "./pages/Forms/AddCourse";
+import EditCourse from "./components/course/EditCourse";
+import ViewCourse from "./components/course/ViewCourse";
+import EditSubject from "./components/subject/EditSubject";
+import ViewSubject from "./components/subject/ViewCourse";
 
 const App = () => {
   return (
@@ -41,28 +47,46 @@ const App = () => {
         {/* Dashboard Layout */}
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+
           <Route path="/student" element={<Student />} />
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/student-view/:id" element={<StudentView />} />
           <Route path="/student-edit/:id" element={<EditStudent />} />
+
+          <Route path="/course" element={<Course />} />
+          <Route path="/add-course" element={<AddCourse />} />
+          <Route path="/view-course/:id" element={<ViewCourse />} />
+          <Route path="/edit-course/:id" element={<EditCourse />} />
+
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/add-attendance" element={<AddAttendance />} />
+
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/add-faculty" element={<AddFaculty />} />
+
           <Route path="/fees" element={<Fees />} />
           <Route path="/add-student-fees" element={<AddFeeDetails />} />
+
           <Route path="/department" element={<Department />} />
           <Route path="/add-department" element={<AddDepartment />} />
+
           <Route path="/subjects" element={<Subject />} />
           <Route path="/add-subject" element={<AddSubject />} />
+          <Route path="/view-subject/:id" element={<ViewSubject />} />
+          <Route path="/edit-subject/:id" element={<EditSubject />} />
+
           <Route path="/faculty-attendance" element={<FacultyAttendance />} />
           <Route path="/add-faculty-attendance" element={<AddFacultyAttendance />} />
+
           <Route path="/salary" element={<Salary />} />
           <Route path="/add-salary" element={<AddSalary />} />
+
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/add-timetable" element={<AddTimetable />} />
+
           <Route path="/examination" element={<Examination />} />
           <Route path="/add-examination" element={<AddExamination />} />
+
           <Route path="/result" element={<Result />} />
           <Route path="/add-result" element={<AddResult />} />
         </Route>

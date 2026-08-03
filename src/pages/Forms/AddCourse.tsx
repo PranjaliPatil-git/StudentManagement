@@ -18,19 +18,23 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import {
-  saveSubject,
-  type SubjectRequest,
-} from "../../services/subjectApi";
-
-import {
-  getCourses,
-  type CourseData,
+  addCourse,
+  type CourseRequest,
 } from "../../services/courseApi";
 
-const AddSubject = () => {
+import {
+  getDepartments,
+} from "../../services/departmentApi";
+
+type Department = {
+  departmentId: number;
+  departmentName: string;
+};
+
+const AddCourse = () => {
   const navigate = useNavigate();
 
-  const [courses, setCourses] = useState<CourseData[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
 
   const {
     register,
@@ -39,13 +43,13 @@ const AddSubject = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<SubjectRequest>({
+  } = useForm<CourseRequest>({
     defaultValues: {
-      courseId: 0,
-      subjectName: "",
-      subjectCode: "",
-      semester: 1,
-      credits: 4,
+      departmentId: 0,
+      courseName: "",
+      courseCode: "",
+      duration: 1,
+      totalSemesters: 2,
       description: "",
       status: true,
     },
@@ -55,30 +59,30 @@ const AddSubject = () => {
   const status = watch("status");
 
   useEffect(() => {
-    void loadCourses();
+    const loadDepartments = async () => {
+      try {
+        const data = await getDepartments();
+        setDepartments(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    void loadDepartments();
   }, []);
 
-  const loadCourses = async () => {
+  const onSubmit = async (data: CourseRequest) => {
     try {
-      const response = await getCourses();
-      setCourses(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      await addCourse(data);
 
-  const onSubmit = async (data: SubjectRequest) => {
-    try {
-      await saveSubject(data);
-
-      alert("Subject Added Successfully");
+      alert("Course Added Successfully");
 
       reset();
 
-      navigate("/subjects");
+      navigate("/course");
     } catch (error) {
       console.error(error);
-      alert("Failed to Save Subject");
+      alert("Failed to Add Course");
     }
   };
 
@@ -102,10 +106,12 @@ const AddSubject = () => {
             mb: 3,
           }}
         >
-          Add Subject
+          Add Course
         </Typography>
 
         <Stack spacing={3}>
+
+          {/* Department + Course Name */}
 
           <Box
             sx={{
@@ -113,50 +119,49 @@ const AddSubject = () => {
               gap: 3,
             }}
           >
-
             <FormControl
               fullWidth
-              error={!!errors.courseId}
+              error={!!errors.departmentId}
             >
               <InputLabel>
-                Course
+                Department
               </InputLabel>
 
               <Select
-                label="Course"
+                label="Department"
                 defaultValue=""
-                {...register("courseId", {
-                  required: "Course is required",
+                {...register("departmentId", {
+                  required: "Department is required",
                   valueAsNumber: true,
                 })}
               >
-                {courses.map((course) => (
+                {departments.map((department) => (
                   <MenuItem
-                    key={course.courseId}
-                    value={course.courseId}
+                    key={department.departmentId}
+                    value={department.departmentId}
                   >
-                    {course.courseName}
+                    {department.departmentName}
                   </MenuItem>
                 ))}
               </Select>
 
               <FormHelperText>
-                {errors.courseId?.message}
+                {errors.departmentId?.message}
               </FormHelperText>
-
             </FormControl>
 
             <TextField
-              label="Subject Name"
+              label="Course Name"
               fullWidth
-              {...register("subjectName", {
-                required: "Subject Name is required",
+              {...register("courseName", {
+                required: "Course Name is required",
               })}
-              error={!!errors.subjectName}
-              helperText={errors.subjectName?.message}
+              error={!!errors.courseName}
+              helperText={errors.courseName?.message}
             />
-
           </Box>
+
+          {/* Course Code + Duration */}
 
           <Box
             sx={{
@@ -164,91 +169,75 @@ const AddSubject = () => {
               gap: 3,
             }}
           >
-
             <TextField
-              label="Subject Code"
+              label="Course Code"
               fullWidth
-              {...register("subjectCode", {
-                required: "Subject Code is required",
+              {...register("courseCode", {
+                required: "Course Code is required",
               })}
-              error={!!errors.subjectCode}
-              helperText={errors.subjectCode?.message}
+              error={!!errors.courseCode}
+              helperText={errors.courseCode?.message}
             />
 
-            <FormControl
-              fullWidth
-              error={!!errors.semester}
-            >
-              <InputLabel>
-                Semester
-              </InputLabel>
-
-              <Select
-                label="Semester"
-                defaultValue={1}
-                {...register("semester", {
-                  valueAsNumber: true,
-                })}
-              >
-                <MenuItem value={1}>Semester 1</MenuItem>
-                <MenuItem value={2}>Semester 2</MenuItem>
-                <MenuItem value={3}>Semester 3</MenuItem>
-                <MenuItem value={4}>Semester 4</MenuItem>
-                <MenuItem value={5}>Semester 5</MenuItem>
-                <MenuItem value={6}>Semester 6</MenuItem>
-                <MenuItem value={7}>Semester 7</MenuItem>
-                <MenuItem value={8}>Semester 8</MenuItem>
-              </Select>
-
-              <FormHelperText>
-                {errors.semester?.message}
-              </FormHelperText>
-
-            </FormControl>
-
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              gap: 3,
-            }}
-          >
-
             <TextField
-              label="Credits"
+              label="Duration (Years)"
               type="number"
               fullWidth
-              {...register("credits", {
-                required: "Credits are required",
+              {...register("duration", {
+                required: "Duration is required",
                 valueAsNumber: true,
                 min: {
                   value: 1,
-                  message: "Minimum credit is 1",
-                },
-                max: {
-                  value: 10,
-                  message: "Maximum credit is 10",
+                  message: "Minimum duration is 1",
                 },
               })}
-              error={!!errors.credits}
-              helperText={errors.credits?.message}
+              error={!!errors.duration}
+              helperText={errors.duration?.message}
+            />
+          </Box>
+
+          {/* Total Semesters + Status */}
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: 3,
+              alignItems: "center",
+            }}
+          >
+            <TextField
+              label="Total Semesters"
+              type="number"
+              fullWidth
+              {...register("totalSemesters", {
+                required: "Total Semesters is required",
+                valueAsNumber: true,
+                min: {
+                  value: 1,
+                  message: "Minimum semester is 1",
+                },
+              })}
+              error={!!errors.totalSemesters}
+              helperText={errors.totalSemesters?.message}
             />
 
             <FormControlLabel
               control={
                 <Switch
                   checked={status}
-                  onChange={(event) =>
-                    setValue("status", event.target.checked)
+                  onChange={(e) =>
+                    setValue(
+                      "status",
+                      e.target.checked
+                    )
                   }
                 />
               }
               label={status ? "Active" : "Inactive"}
-              sx={{ mt: 1 }}
             />
-
           </Box>
+
+          {/* Description */}
 
           <TextField
             label="Description"
@@ -262,6 +251,8 @@ const AddSubject = () => {
             helperText={errors.description?.message}
           />
 
+          {/* Buttons */}
+
           <Box
             sx={{
               display: "flex",
@@ -269,9 +260,9 @@ const AddSubject = () => {
               gap: 2,
             }}
           >
-
             <Button
               variant="outlined"
+              color="secondary"
               onClick={() => reset()}
             >
               Reset
@@ -280,7 +271,7 @@ const AddSubject = () => {
             <Button
               variant="contained"
               color="error"
-              onClick={() => navigate("/subjects")}
+              onClick={() => navigate("/course")}
             >
               Cancel
             </Button>
@@ -289,17 +280,14 @@ const AddSubject = () => {
               type="submit"
               variant="contained"
             >
-              Save Subject
+              Save Course
             </Button>
-
           </Box>
 
         </Stack>
-
       </Box>
-
     </Box>
   );
 };
 
-export default AddSubject;
+export default AddCourse;

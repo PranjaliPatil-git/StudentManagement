@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material"
-import StudentTable from "../components/StudentTable"
+import StudentTable from "../components/student/StudentTable"
 import { useNavigate } from "react-router-dom"
 
 const Student = () => {

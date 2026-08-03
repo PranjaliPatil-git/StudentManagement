@@ -15,47 +15,56 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import { useNavigate } from "react-router-dom";
+import {
+  getCourses,
+  deleteCourse,
+  type CourseData,
+} from "../../services/courseApi";
+
 interface Column {
   id:
-    | "subjectName"
-    | "subjectCode"
-    | "department"
-    | "semester"
-    | "credits"
+    | "courseName"
+    | "courseCode"
+    | "departmentName"
+    | "duration"
+    | "totalSemesters"
     | "status"
     | "actions";
 
   label: string;
+
   minWidth?: number;
+
   align?: "left" | "center" | "right";
 }
 
 const columns: readonly Column[] = [
   {
-    id: "subjectName",
-    label: "Subject Name",
+    id: "courseName",
+    label: "Course Name",
     minWidth: 220,
   },
   {
-    id: "subjectCode",
-    label: "Subject Code",
+    id: "courseCode",
+    label: "Course Code",
     minWidth: 150,
   },
   {
-    id: "department",
+    id: "departmentName",
     label: "Department",
     minWidth: 220,
   },
   {
-    id: "semester",
-    label: "Semester",
+    id: "duration",
+    label: "Duration (Years)",
     minWidth: 120,
     align: "center",
   },
   {
-    id: "credits",
-    label: "Credits",
-    minWidth: 100,
+    id: "totalSemesters",
+    label: "Semesters",
+    minWidth: 120,
     align: "center",
   },
   {
@@ -67,151 +76,50 @@ const columns: readonly Column[] = [
   {
     id: "actions",
     label: "Actions",
-    minWidth: 160,
+    minWidth: 180,
     align: "center",
   },
 ];
 
-interface SubjectData {
-  subjectName: string;
-  subjectCode: string;
-  department: string;
-  semester: number;
-  credits: number;
-  status: boolean;
-}
+const CourseTable = () => {
+  const navigate = useNavigate();
 
-function createData(
-  subjectName: string,
-  subjectCode: string,
-  department: string,
-  semester: number,
-  credits: number,
-  status: boolean
-): SubjectData {
-  return {
-    subjectName,
-    subjectCode,
-    department,
-    semester,
-    credits,
-    status,
-  };
-}
-
-const rows: SubjectData[] = [
-  createData(
-    "Java Programming",
-    "CS301",
-    "Computer Science",
-    3,
-    4,
-    true
-  ),
-
-  createData(
-    "Spring Boot",
-    "CS401",
-    "Computer Science",
-    4,
-    4,
-    true
-  ),
-
-  createData(
-    "React JS",
-    "IT402",
-    "Information Technology",
-    4,
-    3,
-    true
-  ),
-
-  createData(
-    "Operating System",
-    "CS302",
-    "Computer Science",
-    3,
-    4,
-    true
-  ),
-
-  createData(
-    "Machine Learning",
-    "AI501",
-    "Artificial Intelligence",
-    5,
-    4,
-    false
-  ),
-
-  createData(
-    "Cloud Computing",
-    "IT503",
-    "Information Technology",
-    5,
-    4,
-    true
-  ),
-
-  createData(
-    "DBMS",
-    "CS205",
-    "Computer Science",
-    2,
-    4,
-    true
-  ),
-];
-
-export default function SubjectTable() {
-
+  const [rows, setRows] = React.useState<CourseData[]>([]);
   const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const [rowsPerPage, setRowsPerPage] =
-    React.useState(5);
-
-  const handleChangePage = (
-    _event: unknown,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleView = (subject: SubjectData) => {
-    console.log(subject);
-  };
-
-  const handleEdit = (subject: SubjectData) => {
-    console.log(subject);
-  };
-
-  const handleDelete = (subject: SubjectData) => {
-    if (
-      window.confirm(
-        `Delete ${subject.subjectName}?`
-      )
-    ) {
-      console.log(subject);
+  const loadCourses = React.useCallback(async () => {
+    try {
+        const response = await getCourses();
+        setRows(response.data);
+    } catch (error) {
+        console.error(error);
     }
-  };
+}, []);
+
+React.useEffect(() => {
+    void loadCourses();
+}, [loadCourses]);
+
+const handleDelete = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this course?")) {
+        return;
+    }
+
+    try {
+        await deleteCourse(id);
+        await loadCourses();
+    } catch (error) {
+        console.error(error);
+    }
+};
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 520 }}>
         <Table stickyHeader>
-
           <TableHead>
-
             <TableRow>
-
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -225,20 +133,18 @@ export default function SubjectTable() {
                   {column.label}
                 </TableCell>
               ))}
-
             </TableRow>
-
           </TableHead>
 
           <TableBody>
-
             {rows
               .slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage
               )
-              .map((row, index) => (
-                <TableRow hover key={index}>                  {columns.map((column) => (
+              .map((row) => (
+                <TableRow hover key={row.courseId}>
+                  {columns.map((column) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -254,7 +160,9 @@ export default function SubjectTable() {
                           <Tooltip title="View">
                             <IconButton
                               color="primary"
-                              onClick={() => handleView(row)}
+                              onClick={() =>
+                                navigate(`/view-course/${row.courseId}`)
+                              }
                             >
                               <VisibilityIcon />
                             </IconButton>
@@ -263,7 +171,9 @@ export default function SubjectTable() {
                           <Tooltip title="Edit">
                             <IconButton
                               color="success"
-                              onClick={() => handleEdit(row)}
+                              onClick={() =>
+                                navigate(`/edit-course/${row.courseId}`)
+                              }
                             >
                               <EditIcon />
                             </IconButton>
@@ -272,34 +182,39 @@ export default function SubjectTable() {
                           <Tooltip title="Delete">
                             <IconButton
                               color="error"
-                              onClick={() => handleDelete(row)}
+                              onClick={() =>
+                                handleDelete(row.courseId)
+                              }
                             >
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
                         </>
                       ) : (
-                        row[column.id as keyof SubjectData]
+                        row[column.id as keyof CourseData]
                       )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
           </TableBody>
-
         </Table>
       </TableContainer>
 
       <TablePagination
         component="div"
-        rowsPerPageOptions={[5, 10, 25]}
         count={rows.length}
         page={page}
         rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        onRowsPerPageChange={(event) => {
+          setRowsPerPage(+event.target.value);
+          setPage(0);
+        }}
       />
-
     </Paper>
   );
-}
+};
+
+export default CourseTable;

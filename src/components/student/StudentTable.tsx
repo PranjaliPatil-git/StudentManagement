@@ -15,8 +15,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import { getStudents, deleteStudent } from "../services/studentApi";
-import type { Student } from "../services/studentApi";
+import { getStudents, deleteStudent } from "../../services/studentApi";
+import type { Student } from "../../services/studentApi";
 
 
 

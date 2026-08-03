@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import StudentTable from "../components/StudentTable";
+import StudentTable from "../components/student/StudentTable";
 
 const Dashboard = () => {
 
