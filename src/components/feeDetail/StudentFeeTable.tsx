@@ -13,17 +13,35 @@ import Tooltip from "@mui/material/Tooltip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  deleteFee,
+  getFees,
+  type StudentFee,
+} from "../../services/feeApi";
+
+
 
 interface Column {
-  id: "name" | "department" | "email" | "phone" | "totalFee" | "paidAmount" | "paidDate" | "paymentType" | "actions";
+  id:
+  | "studentName"
+  | "departmentName"
+  | "email"
+  | "phone"
+  | "totalFee"
+  | "paidAmount"
+  | "paidDate"
+  | "paymentType"
+  | "actions";
   label: string;
   minWidth?: number;
   align?: "left" | "center" | "right";
 }
 
 const columns: readonly Column[] = [
-  { id: "name", label: "Name", minWidth: 180 },
-  { id: "department", label: "Department", minWidth: 150 },
+  { id: "studentName", label: "Name", minWidth: 180 },
+  { id: "departmentName", label: "Department", minWidth: 150 },
   { id: "email", label: "Email", minWidth: 250 },
   { id: "phone", label: "Phone", minWidth: 150 },
   { id: "totalFee", label: "Total Fee", minWidth: 150 },
@@ -33,86 +51,14 @@ const columns: readonly Column[] = [
   { id: "actions", label: "Actions", minWidth: 150, align: "center" },
 ];
 
-interface Data {
-  name: string;
-  department: string;
-  email: string;
-  phone: string;
-  totalFee: number;
-  paidAmount: number;
-  paidDate: string;
-  paymentType: string
-}
-
-function createData(
-  name: string,
-  department: string,
-  email: string,
-  phone: string,
-  totalFee: number,
-  paidAmount: number,
-  paidDate: string,
-  paymentType: string
-): Data {
-  return { name, department, email, phone, totalFee, paidAmount, paidDate, paymentType };
-}
-
-const rows: Data[] = [
-  createData(
-    "Pranjali Patil",
-    "Electrical",
-    "pranjali@gmail.com",
-    "9876543210",
-    40000,
-    20000,
-    "01-01-2026",
-    "Cash"
-  ),
-  createData(
-    "Aman Sharma",
-    "IT",
-    "aman@gmail.com",
-    "9876543211",
-    50000,
-    20000,
-    "15-02-2026",
-    "Online"
-  ),
-  createData(
-    "Raj Verma",
-    "Computer Science",
-    "raj@gmail.com",
-    "9876543212",
-    40000,
-    15000,
-    "10-03-2026",
-    "Cash"
-  ),
-  createData(
-    "Sneha Patil",
-    "Engineering",
-    "sneha@gmail.com",
-    "9876543213",
-    40000,
-    10000,
-    "20-04-2026",
-    "Online"
-  ),
-  createData(
-    "Rohan Singh",
-    "Sales",
-    "rohan@gmail.com",
-    "9876543214",
-    50000,
-    25000,
-    "12-05-2026",
-    "Cash"
-  ),
-];
 
 export default function StudentFeeTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [rows, setRows] = useState<StudentFee[]>([]);
+
+  const navigate = useNavigate();
 
   const handleChangePage = (
     _event: unknown,
@@ -121,6 +67,19 @@ export default function StudentFeeTable() {
     setPage(newPage);
   };
 
+   const loadFees = async () => {
+    try {
+      const response = await getFees();
+      setRows(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadFees();
+  }, []);
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -128,24 +87,26 @@ export default function StudentFeeTable() {
     setPage(0);
   };
 
-  const handleView = (student: Data) => {
-    console.log("View Student:", student);
-    // navigate(`/student/${student.id}`);
+  const handleView = (student: StudentFee) => {
+    navigate(`/view-fee/${student.id}`);
   };
 
-  const handleEdit = (student: Data) => {
-    console.log("Edit Student:", student);
-    // navigate(`/edit-student/${student.id}`);
+  const handleEdit = (student: StudentFee) => {
+    navigate(`/edit-fee/${student.id}`);
   };
 
-  const handleDelete = (student: Data) => {
+  const handleDelete = async (student: StudentFee) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${student.name}?`
+      `Are you sure you want to delete ${student.studentName}?`
     );
 
-    if (confirmDelete) {
-      console.log("Deleted:", student);
-      // Call delete API here
+    if (!confirmDelete) return;
+
+    try {
+      await deleteFee(student.id);
+      loadFees();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -174,8 +135,8 @@ export default function StudentFeeTable() {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
-                <TableRow hover key={index}>
+              .map((row) => (
+                <TableRow hover key={row.id}>
                   {columns.map((column) => (
                     <TableCell key={column.id} align={column.align}>
                       {column.id === "actions" ? (
@@ -208,7 +169,7 @@ export default function StudentFeeTable() {
                           </Tooltip>
                         </>
                       ) : (
-                        row[column.id as keyof Data]
+                        row[column.id as keyof StudentFee]
                       )}
                     </TableCell>
                   ))}

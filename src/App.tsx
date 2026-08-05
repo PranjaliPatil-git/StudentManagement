@@ -34,6 +34,8 @@ import EditCourse from "./components/course/EditCourse";
 import ViewCourse from "./components/course/ViewCourse";
 import EditSubject from "./components/subject/EditSubject";
 import ViewSubject from "./components/subject/ViewCourse";
+import ViewFeeDetails from "./components/feeDetail/ViewFeeDetails";
+import EditFeeDetails from "./components/feeDetail/EditFeeDetails";
 
 const App = () => {
   return (
@@ -66,6 +68,8 @@ const App = () => {
 
           <Route path="/fees" element={<Fees />} />
           <Route path="/add-student-fees" element={<AddFeeDetails />} />
+          <Route path="/view-fee/:id" element={<ViewFeeDetails />}/>
+          <Route path="/edit-fee/:id" element={<EditFeeDetails />}/>
 
           <Route path="/department" element={<Department />} />
           <Route path="/add-department" element={<AddDepartment />} />

@@ -1,20 +1,46 @@
-import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+import { getStudents } from "../../services/studentApi";
+import { addFee } from "../../services/feeApi";
 
-type StudentData = {
+type Student = {
+    id: number;
     name: string;
-    department: string;
     email: string;
     phone: string;
+    department: {
+        departmentId: number;
+        departmentName: string;
+        departmentCode: string;
+    };
+};
+
+type StudentFeeData = {
+    studentId: number;
     totalFee: number;
     paidAmount: number;
     paidDate: string;
-    paymentType: string
-}
+    paymentType: string;
+};
 
 const AddFeeDetails = () => {
+    const navigate = useNavigate();
+
+    const [students, setStudents] = useState<Student[]>([]);
 
     const {
         register,
@@ -22,16 +48,13 @@ const AddFeeDetails = () => {
         reset,
         watch,
         formState: { errors },
-    } = useForm<StudentData>({
+    } = useForm<StudentFeeData>({
         defaultValues: {
-            name: "",
-            department: "",
-            email: "",
-            phone: "",
+            studentId: 0,
             totalFee: 0,
             paidAmount: 0,
             paidDate: "",
-            paymentType: ""
+            paymentType: "",
         },
     });
 
@@ -41,51 +64,64 @@ const AddFeeDetails = () => {
 
     const remainingFee = Math.max(0, totalFee - paidAmount);
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        loadStudents();
+    }, []);
 
-    const onRegister = (data: StudentData) => {
-        console.log(data);
-        alert("Student Fee Added Successful")
-        reset();
-        navigate("/fees");
-    }
+    const loadStudents = async () => {
+        try {
+            const response = await getStudents();
+           setStudents(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
+    const onSubmit = async (data: StudentFeeData) => {
+        try {
+            await addFee(data);
+
+            alert("Student Fee Added Successfully");
+
+            reset();
+
+            navigate("/fees");
+        } catch (error) {
+            console.log(error);
+            alert("Failed to add fee");
+        }
+    };
 
     return (
-        <Box component="form" onSubmit={handleSubmit(onRegister)} noValidate>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
             <Box sx={{ boxShadow: 3, p: 4 }}>
-                <Typography sx={{ mb: 2, fontWeight: "bold" }}>Add Student Fee</Typography>
+                <Typography sx={{ mb: 2, fontWeight: "bold" }}>
+                    Add Student Fee
+                </Typography>
 
                 <Stack spacing={2}>
-                    <Box sx={{ display: "flex", gap: 3 }}>
-                        <TextField label="Name" fullWidth
-                            {...register("name", {
-                                required: "Name is required",
-                            })} error={!!errors.name} helperText={errors.name?.message} />
-                        <TextField label="Department" fullWidth
-                            {...register("department", {
-                                required: "Department is required",
-                            })} error={!!errors.department} helperText={errors.department?.message} />
-                    </Box>
+                    <FormControl fullWidth error={!!errors.studentId}>
+                        <InputLabel>Student</InputLabel>
 
-                    <Box sx={{ display: "flex", gap: 3 }}>
-                        <TextField label="Email" type="email" fullWidth
-                            {...register("email", {
-                                required: "Email is required",
-                                pattern: {
-                                    value: /^\S+@\S+\.\S+$/,
-                                    message: "Enter a valid email",
-                                },
-                            })} error={!!errors.email} helperText={errors.email?.message} />
-                        <TextField label="Phone Number" fullWidth
-                            {...register("phone", {
-                                required: "Mobile number is required",
-                                pattern: {
-                                    value: /^[6-9]\d{9}$/,
-                                    message: "Enter a valid 10-digit mobile number",
-                                },
-                            })} error={!!errors.phone} helperText={errors.phone?.message} />
-                    </Box>
+                        <Select
+                            label="Student"
+                            defaultValue=""
+                            {...register("studentId", {
+                                required: "Student is required",
+                                valueAsNumber: true,
+                            })}
+                        >
+                            {students.map((student) => (
+                                <MenuItem key={student.id} value={student.id}>
+                                    {student.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
+                        <FormHelperText>
+                            {errors.studentId?.message}
+                        </FormHelperText>
+                    </FormControl>
 
                     <Box sx={{ display: "flex", gap: 3 }}>
                         <FormControl fullWidth error={!!errors.paymentType}>
@@ -98,15 +134,17 @@ const AddFeeDetails = () => {
                                     required: "Payment Type is required",
                                 })}
                             >
-                                <MenuItem value="Online">Online</MenuItem>
                                 <MenuItem value="Cash">Cash</MenuItem>
+                                <MenuItem value="Online">Online</MenuItem>
                             </Select>
 
-                            <FormHelperText>{errors.paymentType?.message}</FormHelperText>
+                            <FormHelperText>
+                                {errors.paymentType?.message}
+                            </FormHelperText>
                         </FormControl>
 
                         <TextField
-                            label="Payment Paid Date"
+                            label="Paid Date"
                             type="date"
                             fullWidth
                             slotProps={{
@@ -115,7 +153,7 @@ const AddFeeDetails = () => {
                                 },
                             }}
                             {...register("paidDate", {
-                                required: "Joining date is required",
+                                required: "Paid Date is required",
                             })}
                             error={!!errors.paidDate}
                             helperText={errors.paidDate?.message}
@@ -123,11 +161,17 @@ const AddFeeDetails = () => {
                     </Box>
 
                     <Box sx={{ display: "flex", gap: 3 }}>
-                        <TextField label="Total Fees" type="number" fullWidth
+                        <TextField
+                            label="Total Fee"
+                            type="number"
+                            fullWidth
                             {...register("totalFee", {
                                 required: "Total Fee is required",
                                 valueAsNumber: true,
-                            })} error={!!errors.totalFee} helperText={errors.totalFee?.message} />
+                            })}
+                            error={!!errors.totalFee}
+                            helperText={errors.totalFee?.message}
+                        />
 
                         <TextField
                             label="Remaining Fee"
@@ -148,7 +192,8 @@ const AddFeeDetails = () => {
                                 required: "Paid Amount is required",
                                 valueAsNumber: true,
                                 validate: (value) =>
-                                    value <= totalFee || "Paid Amount cannot exceed Total Fee"
+                                    value <= totalFee ||
+                                    "Paid Amount cannot exceed Total Fee",
                             })}
                             error={!!errors.paidAmount}
                             helperText={errors.paidAmount?.message}
@@ -156,27 +201,23 @@ const AddFeeDetails = () => {
                     </Box>
 
                     <Box sx={{ display: "flex", gap: 3 }}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                        >
+                        <Button type="submit" variant="contained" fullWidth>
                             Add Fee
                         </Button>
+
                         <Button
                             variant="contained"
+                            color="error"
                             fullWidth
-                            sx={{ background: "red" }}
                             onClick={() => navigate("/fees")}
                         >
                             Cancel
                         </Button>
                     </Box>
-
                 </Stack>
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-export default AddFeeDetails
+export default AddFeeDetails;
